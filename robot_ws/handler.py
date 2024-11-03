@@ -8,12 +8,16 @@ import os
 import numpy as np
 from time import sleep
 import math
-import library
+import yaml
 from disp import display
 from h39 import rmotor, lightBulb
 from event import ServoEvent
 from datetime import datetime
 
+
+# Open the YAML file in the parent directory
+with open('../config/robot_params.yaml', 'r') as file:
+    config = yaml.safe_load(file)
 
 class ClientThread(threading.Thread):
 	def __init__(self, ip, port, debug = False):
@@ -39,20 +43,27 @@ class ClientThread(threading.Thread):
 		self.setupLamp()
 		self.setupMotors()
 		self.setupServo()
+		print("Setup complete")
 		print("[+] New server started from:", ip + " " + str(port))
 		if (self.sstate == 1 and self.mstate == 1 and self.lstate == 1 and self.dstate == 1):
 			print("Rover is ready")
+			self.display.show_params(["Display:  ", "Bulb:  ", "Motors:  ", "Servo:  "], 
+			[
+				config['configuration']['state'][1] if self.dstate else config['configuration']['state'][0],
+				config['configuration']['state'][1] if self.lstate else config['configuration']['state'][0],
+				config['configuration']['state'][1] if self.mstate else config['configuration']['state'][0],
+				config['configuration']['state'][1] if self.sstate else config['configuration']['state'][0]]
+		)
 
-		self.display.show_params(["display:  ", "lighBukb:  ", "motors:  ", "servs:  "], [library.state[self.dstate], library.state[self.lstate], library.state[self.mstate], library.state[self.sstate]])
 
 	def setupConnection(self):
 		try:
 			print("Waiting for connection")
 			self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-			self.socket.bind((library.HOST, library.PORT))
+			self.socket.bind((config['configuration']['HOST'], config['configuration']['PORT']))
 			self.socket.listen(5)
 			self.clientsocket, self.address = self.socket.accept()
-			print(f"Connected from {self.address} has been refused!")
+			print(f"Connected from pult at {self.address} has been established!")
 		except Exception as e:
 			raise ConnectionError(f"Failed to connect to {self.address}", str(e))
 
@@ -94,7 +105,7 @@ class ClientThread(threading.Thread):
 					self.motor.motor_stop()
 					_exit = 0
 					self.closeConnection()
-				sleep(library.pulsebeat)
+				sleep(config['configuration']['timings']['pulsebeat'])
 
 			except:
 				self.motor.motor_stop()
@@ -113,31 +124,31 @@ class ClientThread(threading.Thread):
 
 	def utiliter(self):
 		while True:
-			sleep(library.pulsebeat)
-			if self.r_data[library.keyboard["x"]] == 1:
+			sleep(config['configuration']['timings']['pulsebeat'])
+			if self.r_data[config['configuration']['keyboard']['x']] == 1:
 				if self.boost <= 0.95:
 					self.boost = self.boost + 0.05
 					self.display.show_params(["speed", "", "", ""], [round(self.boost, 2), "", "", ""])
 					print("current speed", round(self.boost, 2))
 				self.motor.motor_speed_dercrese(self.m_speed, self.boost)
-				sleep(library.time_delay_seconds)
-			if self.r_data[library.keyboard["z"]] == 1:
+				sleep(config['configuration']['timings']['time_delay_seconds'])
+			if self.r_data[config['configuration']['keyboard']['z']] == 1:
 				if self.boost > 0.3:
 					self.boost = self.boost - 0.05
 					self.display.show_params(["speed", "", "", ""], [round(self.boost, 2), "", "", ""])
 					print("z", round(self.boost, 2))
 				self.motor.motor_speed_increase(self.m_speed, self.boost)
-				sleep(library.time_delay_seconds)
+				sleep(config['configuration']['timings']['time_delay_seconds'])
 
-			if self.r_data[library.keyboard["v"]] == 1:
+			if self.r_data[config['configuration']['keyboard']['v']] == 1:
 				self.lamp.lampOn()
-				sleep(library.time_delay_seconds)
+				sleep(config['configuration']['timings']['time_delay_seconds'])
 
-			if self.r_data[library.keyboard["b"]] == 1:
+			if self.r_data[config['configuration']['keyboard']['b']] == 1:
 				self.lamp.lampOff()
-				sleep(library.time_delay_seconds)
+				sleep(config['configuration']['timings']['time_delay_seconds'])
 
-			if (self.r_data[library.keyboard["1"]] == 1) and  (self.r_data[library.keyboard["z"]] == 1) and  (self.r_data[library.keyboard["p"]] == 1):
+			if (self.r_data[config['configuration']['keyboard']["1"]] == 1) and  (self.r_data[config['configuration']['keyboard']['z']] == 1) and  (self.r_data[config['configuration']['keyboard']['p']] == 1):
 				self.closeConnection()
 				self.display.show_params(["shutdown", "", "", ""], ["......", "......", "...", ""])
 				os.system("shutdown now")
@@ -145,67 +156,67 @@ class ClientThread(threading.Thread):
 
 	def servorer(self):
 		while True:
-			sleep(library.pulsebeat)
+			sleep(config['configuration']['timings']['pulsebeat'])
 			if self.sstate == 1:
 				try:
-					if self.r_data[library.keyboard["r"]] == 1:
+					if self.r_data[config['configuration']['keyboard']['r']] == 1:
 						self.serv.calibrationR()
-						sleep(library.time_delay_seconds)
+						sleep(config['configuration']['timings']['time_delay_seconds'])
 
-					if self.r_data[library.keyboard["t"]] == 1:
+					if self.r_data[config['configuration']['keyboard']['t']] == 1:
 						self.serv.calibrationE()
-						sleep(library.time_delay_seconds)
+						sleep(config['configuration']['timings']['time_delay_seconds'])
 
-					if self.r_data[library.keyboard["1"]] == 1:
+					if self.r_data[config['configuration']['keyboard']["1"]] == 1:
 						self.serv.decreaseCamAngle(1)
-					if self.r_data[library.keyboard["2"]] == 1:
+					if self.r_data[config['configuration']['keyboard']["2"]] == 1:
 						self.serv.increaseCamAngle(1)
 
-					if self.r_data[library.keyboard["q"]] == 1:
+					if self.r_data[config['configuration']['keyboard']['q']] == 1:
 						self.serv.decreaseWheelAngle(5)
-					if self.r_data[library.keyboard["e"]] == 1:
+					if self.r_data[config['configuration']['keyboard']['e']] == 1:
 						self.serv.increaseWheelAngle(5)
 
-					if self.r_data[library.keyboard["u"]] == 1:
-						self.serv.increaseManAngle(library.servoName["man1"], 2)
-					if self.r_data[library.keyboard["h"]] == 1:
-						self.serv.decreaseManAngle(library.servoName["man1"], 2)
+					if self.r_data[config['configuration']['keyboard']['u']] == 1:
+						self.serv.increaseManAngle(config['configuration']['servoName']["man1"], 2)
+					if self.r_data[config['configuration']['keyboard']['h']] == 1:
+						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man1"], 2)
 
-					if self.r_data[library.keyboard["i"]] == 1:
-						self.serv.increaseManAngle(library.servoName["man2"], 2)
-					if self.r_data[library.keyboard["j"]] == 1:
-						self.serv.decreaseManAngle(library.servoName["man2"], 2)
+					if self.r_data[config['configuration']['keyboard']['i']] == 1:
+						self.serv.increaseManAngle(config['configuration']['servoName'].servoName["man2"], 2)
+					if self.r_data[config['configuration']['keyboard']['j']] == 1:
+						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man2"], 2)
 
-					if self.r_data[library.keyboard["o"]] == 1:
-						self.serv.increaseManAngle(library.servoName["man3"], 3)
-					if self.r_data[library.keyboard["k"]] == 1:
-						self.serv.decreaseManAngle(library.servoName["man3"], 3)
+					if self.r_data[config['configuration']['keyboard']['o']] == 1:
+						self.serv.increaseManAngle(config['configuration']['servoName'].servoName["man3"], 3)
+					if self.r_data[config['configuration']['keyboard']['k']] == 1:
+						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man3"], 3)
 
-					if self.r_data[library.keyboard["p"]] == 1:
-						self.serv.increaseManAngle(library.servoName["man4"], 4)
-					if self.r_data[library.keyboard["l"]] == 1:
-						self.serv.decreaseManAngle(library.servoName["man4"], 4)
+					if self.r_data[config['configuration']['keyboard']['p']] == 1:
+						self.serv.increaseManAngle(config['configuration']['servoName'].servoName["man4"], 4)
+					if self.r_data[config['configuration']['keyboard']['l']] == 1:
+						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man4"], 4)
 
-					if self.r_data[library.keyboard["g"]] == 1:
-						self.serv.increaseManAngle(library.servoName["man5"], 3)
-					if self.r_data[library.keyboard["y"]] == 1:
-						self.serv.decreaseManAngle(library.servoName["man5"], 3)
+					if self.r_data[config['configuration']['keyboard']['g']] == 1:
+						self.serv.increaseManAngle(config['configuration']['servoName'].servoName["man5"], 3)
+					if self.r_data[config['configuration']['keyboard']['y']] == 1:
+						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man5"], 3)
 
 				except AttributeError:
 					pass
 
 	def machinist(self):
 		while True:
-			sleep(library.pulsebeat)
+			sleep(config['configuration']['timings']['pulsebeat'])
 			if self.mstate == 1:
 				try:
-					if self.r_data[library.keyboard["w"]] == 1:
+					if self.r_data[config['configuration']['keyboard']['w']] == 1:
 						self.motor.rotate_clockwise()
-					elif self.r_data[library.keyboard["s"]] == 1:
+					elif self.r_data[config['configuration']['keyboard']['s']] == 1:
 						self.motor.rotate_counterwise()
-					elif self.r_data[library.keyboard["a"]] == 1:
+					elif self.r_data[config['configuration']['keyboard']['a']] == 1:
 						self.motor.turn_right()
-					elif self.r_data[library.keyboard["d"]] == 1:
+					elif self.r_data[config['configuration']['keyboard']['d']] == 1:
 						self.motor.turn_left()
 					else:
 						self.motor.motor_stop()
@@ -254,14 +265,14 @@ if __name__ == "__main__":
 		print("Waiting for connection")
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		s.bind((library.HOST, library.PORT))
+		s.bind((config['HOST'], config['PORT']))
 		s.listen(5)
 		clientsocket, address = s.accept()
 		print("Connected from {address} has been refused!")
 	except Exception as e:
 		raise ConnectionError(f"Failed to connect to {address}", str(e))
 
-	newconnection = ClientThread(library.HOST, library.PORT)
+	newconnection = ClientThread(config['HOST'], config['PORT'])
 	newconnection.run()
 
 	while True:

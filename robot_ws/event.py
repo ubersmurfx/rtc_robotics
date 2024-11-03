@@ -2,7 +2,7 @@ from servo import ServoController
 
 
 class ServoEvent():
-	def __init__(self, debug=True):
+	def __init__(self, debug=False):
 		self.controller = ServoController(0x40, debug=False)
 		self.controller.setPWMFreq(50)
 		self.debug = debug

@@ -1,19 +1,4 @@
-'''Configuration'''
-
-'''TIMINGS '''
-pulsebeat = 0.04
-time_delay_seconds = 0.05
-time_calibrate = 0.1
-
-HOST="192.168.0.11"
-PORT=65432
-
 index = 1
-
-state = {
-	1: "OK",
-	0: "ERROR"
-}
 
 keyboard = {
     "w": index,   #move_forward
@@ -39,18 +24,5 @@ keyboard = {
     "r": index + 20,  #reset
     "v": index + 21,  #lamp_on
     "b": index + 22,  #lamp_off
-    "t": index + 23,  #romb_wheel
-}
-
-servoName = {
-	"wheel1": 0,
-	"wheel2": 1,
-	"wheel3": 2,
-	"wheel4": 3,
-	"cam":    4,
-	"man1":   5,
-	"man2":   6,
-	"man3":   7,
-	"man4":   8,
-	"man5":   9
+    "t": index + 23  #romb_wheel
 }

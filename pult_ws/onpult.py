@@ -3,7 +3,14 @@ import sys
 import threading
 from time import sleep
 import socket
-import cval
+import yaml
+import keypad_setup
+
+
+# Open the YAML file in the parent directory
+with open('../config/pult_params.yaml', 'r') as file:
+    config = yaml.safe_load(file)
+
 
 try:
     import numpy as np
@@ -17,7 +24,7 @@ except ImportError:
 
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((cval.HOST, cval.PORT))
+    s.connect((config['configuration']['HOST'], config['configuration']['PORT']))
     send_data = []
 except Exception as e:
     print(sys.exc_info(), "\t", e)
@@ -25,7 +32,7 @@ except Exception as e:
 
 def send_to_robot(package):
     package = np.clip(package, 0, 1).astype(np.uint8)
-    payload = struct.pack(cval.dataType,
+    payload = struct.pack(config['configuration']['dataType'],
         package[0], package[1], package[2], package[3], package[4],
             package[5], package[6], package[7], package[8], package[9],
             package[10],package[11],package[12],package[13],package[14],
@@ -66,16 +73,16 @@ class Control(threading.Thread):
     def connect_keyboard_handlers(self):
         def on_press(key):
             try:
-                if key.char in cval.keyboard:
-                    set_value(cval.keyboard[key.char], 1, self.payload)
+                if key.char in keypad_setup.keyboard:
+                    set_value(keypad_setup.keyboard[key.char], 1, self.payload)
                 else:
                     pass
             except AttributeError:
                 pass
         def on_release(key):
             try:
-                if key.char in cval.keyboard:
-                    set_value(cval.keyboard[key.char], 0, self.payload)
+                if key.char in keypad_setup.keyboard:
+                    set_value(keypad_setup.keyboard[key.char], 0, self.payload)
                 else:
                     pass
             except AttributeError:
@@ -103,7 +110,7 @@ class Sender(Control):
                 print(Control.payload)
                 send_to_robot(Control.payload)
 
-                sleep(cval.delay)
+                sleep(config['configuration']['delay'])
 
             except Exception as err:
                 _exit = 0

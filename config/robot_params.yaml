@@ -1,0 +1,46 @@
+configuration:
+  timings:
+    pulsebeat: 0.04
+    time_delay_seconds: 0.05
+    time_calibrate: 0.1
+  HOST: "192.168.0.12"
+  PORT: 65432
+  state:
+    1: "OK"
+    0: "ERROR"
+  keyboard:
+    w: 1  # move_forward
+    s: 2  # move_backward
+    a: 3  # tank_turn_left
+    d: 4  # tanl_turn_right
+    q: 5  # wheel_turn_left
+    e: 6  # wheel_turn_right
+    "1": 7  # cam_down
+    "2": 8  # cam_up
+    u: 9  # man1_up
+    h: 10  # man1_down
+    i: 11  # man2_up
+    j: 12  # man2_down
+    o: 13  # man3_up
+    k: 14  # man3_down
+    p: 15  # man4_up
+    l: 16  # man4_down
+    g: 17  # man5_up
+    y: 18  # man5_down
+    x: 19  # speed_increase
+    z: 20  # speed_deacrease
+    r: 21  # reset
+    v: 22  # lamp_on
+    b: 23  # lamp_off
+    t: 24  # romb_wheel
+  servoName:
+    wheel1: 0
+    wheel2: 1
+    wheel3: 2
+    wheel4: 3
+    cam: 4
+    man1: 5
+    man2: 6
+    man3: 7
+    man4: 8
+    man5: 9
