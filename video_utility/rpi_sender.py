@@ -5,7 +5,7 @@ import signal
 import os
 
 
-with open('/home/RTC-B-2.0-002/rtc_robotics/config/robot_params.yaml', 'r') as file:
+with open('/home/RTC-C-2.0-002/rtc_robotics/config/robot_params.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 def kill_process_by_name(process_name):

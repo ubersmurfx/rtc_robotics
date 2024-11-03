@@ -16,7 +16,7 @@ from datetime import datetime
 
 
 # Open the YAML file in the parent directory
-with open('/home/RTC-B-2.0-002/rtc_robotics/config/robot_params.yaml', 'r') as file:
+with open('/home/RTC-C-2.0-002/rtc_robotics/config/robot_params.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 class ClientThread(threading.Thread):
@@ -28,9 +28,8 @@ class ClientThread(threading.Thread):
 			       0, 0, 0, 0, 0,
 			       0, 0, 0, 0, 0,
 			       0, 0, 0, 0, 0,
-			       0, 0, 0, 0, 0,
-			       0]
-		self._defaultpackage = 52
+			       0, 0, 0, 0]
+		self._defaultpackage = 48
 		self.debug = debug
 		self.m_speed = 95
 		self.k_turn = 0.4
@@ -84,12 +83,12 @@ class ClientThread(threading.Thread):
 				if (self.debug):
 					print("Size of recieving data", len(data))
 
-				if (len(data) < 26):
+				if (len(data) < 24):
 					count = count + 1
 
-				if (len(data) == 26):
+				if (len(data) == 24):
 					self.r_data = np.frombuffer(data, dtype=np.uint8)
-					if ((np.sum(self.r_data) - self.r_data[25]) % 2) != self.r_data[25]:
+					if ((np.sum(self.r_data) - self.r_data[23]) % 2) != self.r_data[23]:
 						#print(self.r_data)
 						count = count + 1
 					count = 0
@@ -101,8 +100,7 @@ class ClientThread(threading.Thread):
 						       0, 0, 0, 0, 0,
   						       0, 0, 0, 0, 0,
 						       0, 0, 0, 0, 0,
-						       0, 0, 0, 0, 0,
-						       0]
+						       0, 0, 0, 0]
 
 				if count > 10:
 					self.motor.motor_stop()
@@ -199,11 +197,6 @@ class ClientThread(threading.Thread):
 						self.serv.increaseManAngle(config['configuration']['servoName'].servoName["man4"], 4)
 					if self.r_data[config['configuration']['keyboard']['l']] == 1:
 						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man4"], 4)
-
-					if self.r_data[config['configuration']['keyboard']['g']] == 1:
-						self.serv.increaseManAngle(config['configuration']['servoName'].servoName["man5"], 3)
-					if self.r_data[config['configuration']['keyboard']['y']] == 1:
-						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man5"], 3)
 
 				except AttributeError:
 					pass

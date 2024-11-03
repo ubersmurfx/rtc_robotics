@@ -12,8 +12,8 @@ class ServoEvent():
 		self.angle3 = 90
 		self.angle4 = 90
 		self.cam_angle = 90
-		self.man = [140, 130, 130, 90, 90]
-		self.calibrateAngles = [100, 100, 90, 110, 90, 140, 130, 130, 90, 90]
+		self.man = [140, 130, 130, 90]
+		self.calibrateAngles = [100, 100, 90, 110, 90, 140, 130, 130, 90]
 
 		self.deltaAngle = 45
 		self.maxAngles = {
@@ -25,8 +25,7 @@ class ServoEvent():
 		5: 220,
 		6: 230,
 		7: 200,
-		8: 180,
-		9: 180
+		8: 180
 		}
 		self.minAngles = {
 		0: self.calibrateAngles[0] - self.deltaAngle,
@@ -37,8 +36,7 @@ class ServoEvent():
 		5: 60,
 		6: 60,
 		7: 45,
-		8: 0,
-		9: 45
+		8: 0
 		}
 
 	def cstate_get_angle(self, angle):
