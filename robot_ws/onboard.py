@@ -5,7 +5,7 @@ from handler import ClientThread
 
 
 # Open the YAML file in the parent directory
-with open('../config/robot_params.yaml', 'r') as file:
+with open('/home/RTC-B-2.0-002/rtc_robotics/config/robot_params.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 if __name__ == "__main__":
@@ -18,5 +18,5 @@ if __name__ == "__main__":
 			sleep(1)
 			counter = counter + 1
 		except KeyboardInterrupt:
-			rover.closeConnection()
+			robot.closeConnection()
 			break

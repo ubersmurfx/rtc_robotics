@@ -24,13 +24,12 @@ class Display():
 		self.image = Image.new("1", (self.oled.width, self.oled.height))
 		self.draw = ImageDraw.Draw(self.image)
 		self._exit = False
-		self.font = ImageFont.truetype('disp/PixelOperator.ttf', 16)
+		self.font = ImageFont.truetype('/home/RTC-B-2.0-002/rtc_robotics/robot_ws/disp/PixelOperator.ttf', 16)
 
 	def show_params(self, names ,params):
 		self.image = Image.new("1", (self.oled.width, self.oled.height))
 		self.draw = ImageDraw.Draw(self.image)
-		self.font = ImageFont.truetype('disp/PixelOperator.ttf', 16)
-
+		
 		self.draw.rectangle((0, 0, self.oled.width, self.oled.height), outline=0, fill=0)
 		self.draw.text((0, 0), str(names[0]) + " " + str(params[0]), font=self.font, fill=255)
 		self.draw.text((0, 16), str(names[1]) + " " + str(params[1]), font=self.font, fill=255)
@@ -40,12 +39,17 @@ class Display():
 		self.oled.image(self.image)
 		self.oled.show()
 
-	def show_image(self, path):
+	def show_image(self):
 		self.draw.rectangle((0, 0, self.oled.width, self.oled.height), outline=0, fill=0)
-		self.image = Image.open(path).convert('1')
+		self.image = Image.open("/home/RTC-B-2.0-002/rtc_robotics/robot_ws/disp/rtc_logo.png").convert('1')
 		
 		self.oled.image(self.image)
 		self.oled.show()
 		
 	def getcount(self):
 		return self.count
+	
+if __name__=="__main__":
+	startingDisplay = Display()
+	startingDisplay.show_image()
+	startingDisplay.show_params([1,1,1,1],[0,0,0,0])

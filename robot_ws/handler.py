@@ -16,7 +16,7 @@ from datetime import datetime
 
 
 # Open the YAML file in the parent directory
-with open('../config/robot_params.yaml', 'r') as file:
+with open('/home/RTC-B-2.0-002/rtc_robotics/config/robot_params.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 class ClientThread(threading.Thread):
@@ -45,15 +45,18 @@ class ClientThread(threading.Thread):
 		self.setupServo()
 		print("Setup complete")
 		print("[+] New server started from:", ip + " " + str(port))
-		if (self.sstate == 1 and self.mstate == 1 and self.lstate == 1 and self.dstate == 1):
-			print("Rover is ready")
-			self.display.show_params(["Display:  ", "Bulb:  ", "Motors:  ", "Servo:  "], 
+		self.display.show_params(["Display:  ", "Bulb:  ", "Motors:  ", "Servo:  "], 
 			[
 				config['configuration']['state'][1] if self.dstate else config['configuration']['state'][0],
 				config['configuration']['state'][1] if self.lstate else config['configuration']['state'][0],
 				config['configuration']['state'][1] if self.mstate else config['configuration']['state'][0],
 				config['configuration']['state'][1] if self.sstate else config['configuration']['state'][0]]
 		)
+		sleep(3)
+		self.display.show_image()
+		if (self.sstate == 1 and self.mstate == 1 and self.lstate == 1 and self.dstate == 1):
+			print("Rover is ready")
+
 
 
 	def setupConnection(self):
@@ -68,7 +71,7 @@ class ClientThread(threading.Thread):
 			raise ConnectionError(f"Failed to connect to {self.address}", str(e))
 
 	def closeConnection(self):
-		self.display.show_params(["ip", "connection closed", "", ""], [f"{self.address}", "at",datetime.now().strftime("%X"), ""])
+		self.display.show_params(["ip", "connection closed", "", ""], [f"{self.address}", "", "", ""])
 		self.socket.close()
 		print(f"Closing connection to {self.address}")
 

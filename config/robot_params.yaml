@@ -5,6 +5,8 @@ configuration:
     time_calibrate: 0.1
   HOST: "192.168.0.12"
   PORT: 65432
+  STREAM_TARGET: "192.168.0.5"
+  STREAM_PORT: 8554
   state:
     1: "OK"
     0: "ERROR"
