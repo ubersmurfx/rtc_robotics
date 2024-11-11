@@ -151,10 +151,10 @@ class ClientThread(threading.Thread):
 				self.lamp.lampOff()
 				sleep(config['configuration']['timings']['time_delay_seconds'])
 
-			if (self.r_data[config['configuration']['keyboard']["1"]] == 1) and  (self.r_data[config['configuration']['keyboard']['z']] == 1) and  (self.r_data[config['configuration']['keyboard']['p']] == 1):
+			if (self.r_data[config['configuration']['keyboard']["1"]] == 1) and  (self.r_data[config['configuration']['keyboard']['z']] == 1):
 				self.closeConnection()
 				self.display.show_params(["shutdown", "", "", ""], ["......", "......", "...", ""])
-				os.system("shutdown now")
+				os.system("sudo shutdown now")
 
 
 	def servorer(self):
@@ -176,34 +176,34 @@ class ClientThread(threading.Thread):
 						self.serv.increaseCamAngle(1)
 
 					if self.r_data[config['configuration']['keyboard']['q']] == 1:
-						self.serv.decreaseWheelAngle(5)
+						self.serv.decreaseWheelAngle(2)
 					if self.r_data[config['configuration']['keyboard']['e']] == 1:
-						self.serv.increaseWheelAngle(5)
+						self.serv.increaseWheelAngle(2)
 
 					if self.r_data[config['configuration']['keyboard']['u']] == 1:
 						self.serv.increaseManAngle(config['configuration']['servoName']["man1"], 2)
 					if self.r_data[config['configuration']['keyboard']['h']] == 1:
-						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man1"], 2)
+						self.serv.decreaseManAngle(config['configuration']['servoName']["man1"], 2)
 
 					if self.r_data[config['configuration']['keyboard']['i']] == 1:
-						self.serv.increaseManAngle(config['configuration']['servoName'].servoName["man2"], 2)
+						self.serv.increaseManAngle(config['configuration']['servoName']["man2"], 2)
 					if self.r_data[config['configuration']['keyboard']['j']] == 1:
-						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man2"], 2)
+						self.serv.decreaseManAngle(config['configuration']['servoName']["man2"], 2)
 
 					if self.r_data[config['configuration']['keyboard']['o']] == 1:
-						self.serv.increaseManAngle(config['configuration']['servoName'].servoName["man3"], 3)
+						self.serv.increaseManAngle(config['configuration']['servoName']["man3"], 3)
 					if self.r_data[config['configuration']['keyboard']['k']] == 1:
-						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man3"], 3)
+						self.serv.decreaseManAngle(config['configuration']['servoName']["man3"], 3)
 
 					if self.r_data[config['configuration']['keyboard']['p']] == 1:
-						self.serv.increaseManAngle(config['configuration']['servoName'].servoName["man4"], 4)
+						self.serv.increaseManAngle(config['configuration']['servoName']["man4"], 4)
 					if self.r_data[config['configuration']['keyboard']['l']] == 1:
-						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man4"], 4)
+						self.serv.decreaseManAngle(config['configuration']['servoName']["man4"], 4)
 
 					if self.r_data[config['configuration']['keyboard']['g']] == 1:
-						self.serv.increaseManAngle(config['configuration']['servoName'].servoName["man5"], 3)
+						self.serv.increaseManAngle(config['configuration']['servoName']["man5"], 3)
 					if self.r_data[config['configuration']['keyboard']['y']] == 1:
-						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man5"], 3)
+						self.serv.decreaseManAngle(config['configuration']['servoName']["man5"], 3)
 
 				except AttributeError:
 					pass
