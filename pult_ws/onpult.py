@@ -8,9 +8,8 @@ import keypad_setup
 
 
 # Open the YAML file in the parent directory
-with open('/home/RTC-C-2.0-002/rtc_robotics/config/robot_params.yaml', 'r') as file:
+with open('/home/ubersmurf/STUDENT/rtc_robotics/config/pult_params.yaml', 'r') as file:
     config = yaml.safe_load(file)
-
 
 try:
     import numpy as np
@@ -28,7 +27,6 @@ try:
     send_data = []
 except Exception as e:
     print(sys.exc_info(), "\t", e)
-
 
 def send_to_robot(package):
     package = np.clip(package, 0, 1).astype(np.uint8)
@@ -102,8 +100,8 @@ class Sender(Control):
         while _exit != 0:
             try:
 
-                Control.parityBit = (np.sum(Control.payload) - Control.payload[25]) % 2
-                Control.payload[25] = Control.parityBit
+                Control.parityBit = (np.sum(Control.payload) - Control.payload[23]) % 2
+                Control.payload[23] = Control.parityBit
 
                 print(Control.payload)
                 send_to_robot(Control.payload)

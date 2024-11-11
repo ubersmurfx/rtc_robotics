@@ -1,4 +1,4 @@
-import socket
+ximport socket
 import threading
 import struct
 import smbus
@@ -181,22 +181,22 @@ class ClientThread(threading.Thread):
 					if self.r_data[config['configuration']['keyboard']['u']] == 1:
 						self.serv.increaseManAngle(config['configuration']['servoName']["man1"], 2)
 					if self.r_data[config['configuration']['keyboard']['h']] == 1:
-						self.serv.decreaseManAngle(config['configuration']['servoName']["man1"], 2)
+						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man1"], 2)
 
 					if self.r_data[config['configuration']['keyboard']['i']] == 1:
-						self.serv.increaseManAngle(config['configuration']['servoName']["man2"], 2)
+						self.serv.increaseManAngle(config['configuration']['servoName'].servoName["man2"], 2)
 					if self.r_data[config['configuration']['keyboard']['j']] == 1:
-						self.serv.decreaseManAngle(config['configuration']['servoName']["man2"], 2)
+						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man2"], 2)
 
 					if self.r_data[config['configuration']['keyboard']['o']] == 1:
-						self.serv.increaseManAngle(config['configuration']['servoName']["man3"], 3)
+						self.serv.increaseManAngle(config['configuration']['servoName'].servoName["man3"], 3)
 					if self.r_data[config['configuration']['keyboard']['k']] == 1:
-						self.serv.decreaseManAngle(config['configuration']['servoName']["man3"], 3)
+						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man3"], 3)
 
 					if self.r_data[config['configuration']['keyboard']['p']] == 1:
-						self.serv.increaseManAngle(config['configuration']['servoName']["man4"], 4)
+						self.serv.increaseManAngle(config['configuration']['servoName'].servoName["man4"], 4)
 					if self.r_data[config['configuration']['keyboard']['l']] == 1:
-						self.serv.decreaseManAngle(config['configuration']['servoName']["man4"], 4)
+						self.serv.decreaseManAngle(config['configuration']['servoName'].servoName["man4"], 4)
 
 				except AttributeError:
 					pass

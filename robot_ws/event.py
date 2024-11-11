@@ -2,20 +2,20 @@ from servo import ServoController
 
 
 class ServoEvent():
-	def __init__(self, debug=False):
+	def __init__(self, debug=True):
 		self.controller = ServoController(0x40, debug=False)
 		self.controller.setPWMFreq(50)
 		self.debug = debug
 		self.diff = 0.5
 		self.angle1 = 90
 		self.angle2 = 90
-		self.angle3 = 90
+		self.angle3 = 80
 		self.angle4 = 90
 		self.cam_angle = 90
 		self.man = [140, 130, 130, 90]
-		self.calibrateAngles = [100, 100, 90, 110, 90, 140, 130, 130, 90]
+		self.calibrateAngles = [90, 90, 80, 90, 90, 140, 130, 130, 90]
 
-		self.deltaAngle = 45
+		self.deltaAngle = 30
 		self.maxAngles = {
 		0: self.calibrateAngles[0] + self.deltaAngle,
 		1: self.calibrateAngles[1] + self.deltaAngle,
@@ -36,7 +36,7 @@ class ServoEvent():
 		5: 60,
 		6: 60,
 		7: 45,
-		8: 0
+		8: 20
 		}
 
 	def cstate_get_angle(self, angle):
@@ -97,7 +97,6 @@ class ServoEvent():
 		self.man[1] = self.calibrateAngles[6]
 		self.man[2] = self.calibrateAngles[7]
 		self.man[3] = self.calibrateAngles[8]
-		self.man[4] = self.calibrateAngles[9]
 
 		self.set_angle180(0, self.angle1)
 		self.set_angle180(1, self.angle2)
@@ -108,7 +107,6 @@ class ServoEvent():
 		self.set_angle270(6, self.man[1])
 		self.set_angle270(7, self.man[2])
 		self.set_angle180(8, self.man[3])
-		self.set_angle180(9, self.man[4])
 
 	def decreaseWheelAngle(self, value):
 #turn left

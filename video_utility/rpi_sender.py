@@ -5,7 +5,7 @@ import signal
 import os
 
 
-with open('/home/RTC-C-2.0-002/rtc_robotics/config/robot_params.yaml', 'r') as file:
+with open('/home/RTC-C-2.0-005/rtc_robotics/config/robot_params.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 def kill_process_by_name(process_name):
@@ -24,7 +24,7 @@ kill_process_by_name("video")
 now = datetime.datetime.now()
 formatted_time = now.strftime("%Y-%m-%d %H:%M:%S")
 
-command_fast = f"gst-launch-1.0 -v v4l2src device=/dev/video0 ! videoconvert ! videoscale ! video/x-raw,width=1280,height=720,framerate=30/1 ! \
+command_fast = f"gst-launch-1.0 -v v4l2src device=/dev/video0 ! videoconvert ! videoscale ! video/x-raw,width=640,height=480,framerate=30/1 ! \
     x264enc tune=zerolatency bitrate=16000000 speed-preset=superfast ! h264parse ! rtph264pay pt=96 ! \
     udpsink port={config['configuration']['STREAM_PORT']} host={config['configuration']['STREAM_TARGET']}"
 
