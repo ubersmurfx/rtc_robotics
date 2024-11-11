@@ -3,7 +3,7 @@ import datetime
 import yaml
 
 
-with open('/home/RTC-B-2.0-002/rtc_robotics/config/robot_params.yaml', 'r') as file:
+with open('/home/ubersmurf/rtc_robotics/config/robot_params.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 
