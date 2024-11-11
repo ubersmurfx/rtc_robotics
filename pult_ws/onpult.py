@@ -8,7 +8,7 @@ import keypad_setup
 
 
 # Open the YAML file in the parent directory
-with open('/home/ubersmurf/rtc_robotics/config/pult_params.yaml', 'r') as file:
+with open('/home/USERNAME/rtc_robotics/config/pult_params.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 
