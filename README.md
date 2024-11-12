@@ -52,7 +52,7 @@ with open('/home/{USERNAME}/rtc_robotics/config/pult_params.yaml', 'r')
 ```
 - Путь к конфигурационному файлу пульта rtc_robotics/video_utility/rpi_reciever.py
 ```
-with open('/home//{USERNAME}/rtc_robotics/config/robot_params.yaml', 'r')
+with open('/home/{USERNAME}/rtc_robotics/config/robot_params.yaml', 'r')
 ```
 # Управление роботом
 Подключите пульт к WIFI-роутеру.
