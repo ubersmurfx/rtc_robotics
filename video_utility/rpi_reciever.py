@@ -1,11 +1,12 @@
 import subprocess 
 import datetime 
 import yaml
+import os
 
 
-with open('/home/ubersmurf/rtc_robotics/config/robot_params.yaml', 'r') as file:
+config_path = os.path.join(os.environ['HOME'], 'rtc_robotics', 'config', 'robot_params.yaml')
+with open(config_path, 'r') as file:
     config = yaml.safe_load(file)
-
 
 date = "date" 
 date_output = subprocess.check_output(date) 

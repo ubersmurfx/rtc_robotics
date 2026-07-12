@@ -1,44 +1,39 @@
 import subprocess
-import datetime
-import yaml
 import signal
+import sys
+import yaml
+import time
 import os
 
+# Загружаем конфиг если есть
 
-with open('/home/RTC-B-2.0-002/rtc_robotics/config/robot_params.yaml', 'r') as file:
+config_path = os.path.join(os.environ['HOME'], 'rtc_robotics', 'config', 'robot_params.yaml')
+with open(config_path, 'r') as file:
     config = yaml.safe_load(file)
 
-def kill_process_by_name(process_name):
-  output = subprocess.check_output(["ps", "aux"])
-  lines = output.decode().splitlines()
-  for line in lines:
-    if process_name in line:
-      pid = int(line.split()[1])
-      try:
-        os.kill(pid, signal.SIGKILL)
-        print(f"Procces {process_name} (PID: {pid}) has stopped")
-      except ProcessLookupError:
-        print(f"Process {process_name} (PID: {pid}) has not found")
+STREAM_PORT = config['configuration']['STREAM_PORT']
+STREAM_TARGET = config['configuration']['STREAM_TARGET']
 
-kill_process_by_name("video")
-now = datetime.datetime.now()
-formatted_time = now.strftime("%Y-%m-%d %H:%M:%S")
+def signal_handler(sig, frame):
+    print('\nStopping stream...')
+    if process.poll() is None:
+        process.terminate()
+        process.wait()
+    sys.exit(0)
 
-command_fast = f"gst-launch-1.0 -v v4l2src device=/dev/video0 ! videoconvert ! videoscale ! video/x-raw,width=1280,height=720,framerate=30/1 ! \
-    x264enc tune=zerolatency bitrate=16000000 speed-preset=superfast ! h264parse ! rtph264pay pt=96 ! \
-    udpsink port={config['configuration']['STREAM_PORT']} host={config['configuration']['STREAM_TARGET']}"
+signal.signal(signal.SIGINT, signal_handler)
 
-process = subprocess.Popen(command_fast.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+print(f"videostream port: {STREAM_PORT}")
+print(f"videostream target: {STREAM_TARGET}")
+print(f"rpi_stream started at: {time.strftime('%Y-%m-%d %H:%M:%S')}")
 
-print("viseostream port: ", config['configuration']['STREAM_PORT'])
-print("videostream target: ", config['configuration']['STREAM_TARGET'])
-print("rpi_stream started at: ", formatted_time)
+# Отправка видео через rpicam-vid с пайпом в gst-launch для RTP
+cmd = f"rpicam-vid -t 0 --width 640 --height 480 --framerate 30 --codec h264 --inline -o - | gst-launch-1.0 fdsrc ! h264parse ! rtph264pay config-interval=1 pt=96 ! udpsink host={STREAM_TARGET} port={STREAM_PORT} sync=false"
 
-output, error = process.communicate()
-print(f"stdout: {output.decode('utf-8')}")
-print(f"stderr: {error.decode('utf-8')}")
+process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-if process.returncode == 0:
-    print("Pipeline completed")
-else:
-    print(f"Error: {process.returncode}")
+try:
+    output, error = process.communicate()
+except KeyboardInterrupt:
+    process.terminate()
+    print("\nStream stopped")
